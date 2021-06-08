@@ -1,0 +1,7 @@
+@startuml HELLO WORD
+package "Entity"{
+     class Loser
+     class Monster
+     class Father
+} 
+@enduml
