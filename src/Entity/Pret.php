@@ -42,7 +42,7 @@ class Pret
     private $livre;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="prets")
+     * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
      * @ORM\JoinColumn(nullable=false)
      */
     private $adherent;

@@ -71,14 +71,15 @@ class Adherent implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
      */
     private $prets;
 
     public function __construct()
     {
         $this->prets = new ArrayCollection();
-        $this->roles=self::DEFAULT_ROLE;
+        $leRole[] = [ self::DEFAULT_ROLE];
+        $this->roles=$leRole;
     }
 
     public function getId(): ?int
