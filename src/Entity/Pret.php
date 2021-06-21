@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Adherent;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PretRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -44,7 +45,7 @@ class Pret
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="prets")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private $adherent;
 
     public function getId(): ?int
     {
@@ -99,14 +100,14 @@ class Pret
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getAdherent(): ?Adherent
     {
-        return $this->user;
+        return $this->adherent;
     }
 
-    public function setUser(?User $user): self
+    public function setAdherent(?Adherent $adherent): self
     {
-        $this->user = $user;
+        $this->adherent = $adherent;
 
         return $this;
     }

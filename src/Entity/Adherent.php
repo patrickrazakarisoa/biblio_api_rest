@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource() 
  * @UniqueEntity(fields ={"mail"}, message="Il existe déjà un mail {{ value }}, veuillez saisir un autre mail")
  */
-class User implements UserInterface
+class Adherent implements UserInterface
 {
 
     const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -182,7 +182,7 @@ class User implements UserInterface
     {
         if (!$this->prets->contains($pret)) {
             $this->prets[] = $pret;
-            $pret->setUser($this);
+            $pret->setAdherent($this);
         }
 
         return $this;
@@ -192,8 +192,8 @@ class User implements UserInterface
     {
         if ($this->prets->removeElement($pret)) {
             // set the owning side to null (unless already changed)
-            if ($pret->getUser() === $this) {
-                $pret->setUser(null);
+            if ($pret->getAdherent() === $this) {
+                $pret->setAdherent(null);
             }
         }
 
