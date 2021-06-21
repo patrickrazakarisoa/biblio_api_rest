@@ -2,9 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Adherent;
 use App\Entity\Livre;
 use App\Entity\Pret;
+use App\Entity\User;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -45,7 +45,7 @@ class AppFixtures extends Fixture
         $commune=[ "78003","78021","78015","78084","78085","78006","78084","78007","78010","78041","78012","78032","78017"];
 
         for($i=0;$i<25;$i++){
-            $adherent= new Adherent();
+            $adherent= new User();
             $adherent   ->setNom($this->faker->lastName())  
                         ->setPrenom($this->faker->firstName($genre[mt_rand(0,1)]))
                         ->setAdresse($this->faker->streetAddress())
@@ -57,12 +57,21 @@ class AppFixtures extends Fixture
             $this->manager->persist($adherent);                       
         }
 
-        $adherent= new Adherent();
+        $adherent= new User();
             $adherent   ->setNom("Raz")
                         ->setPrenom("Dada")
                         ->setMail("admin@gmail.com")
-                        ->setPassword("Raz");
+                        ->setPassword("raz")
+                        ->setRoles([USER::ROLE_ADMIN]);
             $this->manager->persist($adherent);
+
+        $adherent= new User();
+        $adherent   ->setNom("Durant")
+                    ->setPrenom("Sophie")
+                    ->setMail("manager@gmail.com")
+                    ->setPassword("durant")
+                    ->setRoles([USER::ROLE_MANAGER]);
+        $this->manager->persist($adherent);
 
         $this->manager->flush();
     }
@@ -79,7 +88,7 @@ class AppFixtures extends Fixture
                 $pret = new Pret();
                 $livre = $this->repoLivre->find(mt_rand(1,50));
                 $pret   ->setLivre($livre)
-                        ->setAdherent($this->getReference("adherent".$i))
+                        ->setUser($this->getReference("adherent".$i))
                         ->setDatePret($this->faker->dateTimeBetween('-6 months'));
                 $dateRetourPrevue = date('Y-m-d H:m:n', strtotime('15 days', $pret->getDatePret()->getTimestamp()));
                 $dateRetourPrevue = \DateTime::createFromFormat('Y-m-d H:m:n', $dateRetourPrevue);

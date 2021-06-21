@@ -15,8 +15,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource() 
  * @UniqueEntity(fields ={"mail"}, message="Il existe déjà un mail {{ value }}, veuillez saisir un autre mail")
  */
-class Adherent implements UserInterface
+class User implements UserInterface
 {
+
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_MANAGER = 'ROLE_MANAGER';
+    const ROLE_ADHERENT = 'ROLE_ADHERENT';
+    const DEFAULT_ROLE = 'ROLE_ADHERENT';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -50,6 +56,11 @@ class Adherent implements UserInterface
     private $mail;
 
     /**
+     * @ORM\Column(type="array", length=255, nullable=true)
+     */
+    private $roles;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $telephone;
@@ -60,13 +71,14 @@ class Adherent implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
+     * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="user")
      */
     private $prets;
 
     public function __construct()
     {
         $this->prets = new ArrayCollection();
+        $this->roles=self::DEFAULT_ROLE;
     }
 
     public function getId(): ?int
@@ -170,7 +182,7 @@ class Adherent implements UserInterface
     {
         if (!$this->prets->contains($pret)) {
             $this->prets[] = $pret;
-            $pret->setAdherent($this);
+            $pret->setUser($this);
         }
 
         return $this;
@@ -180,8 +192,8 @@ class Adherent implements UserInterface
     {
         if ($this->prets->removeElement($pret)) {
             // set the owning side to null (unless already changed)
-            if ($pret->getAdherent() === $this) {
-                $pret->setAdherent(null);
+            if ($pret->getUser() === $this) {
+                $pret->setUser(null);
             }
         }
 
@@ -202,8 +214,21 @@ class Adherent implements UserInterface
      *
      * @return string[] The user roles
      */
-    public function getRoles(){
-        return ['ROLE_USER'];
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $roles
+     * @return self
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->roles=$roles;
+        return $this;
     }
 
     /**

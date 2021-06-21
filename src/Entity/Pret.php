@@ -41,10 +41,10 @@ class Pret
     private $livre;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Adherent::class, inversedBy="prets")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="prets")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $adherent;
+    private $user;
 
     public function getId(): ?int
     {
@@ -99,14 +99,14 @@ class Pret
         return $this;
     }
 
-    public function getAdherent(): ?Adherent
+    public function getUser(): ?User
     {
-        return $this->adherent;
+        return $this->user;
     }
 
-    public function setAdherent(?Adherent $adherent): self
+    public function setUser(?User $user): self
     {
-        $this->adherent = $adherent;
+        $this->user = $user;
 
         return $this;
     }
