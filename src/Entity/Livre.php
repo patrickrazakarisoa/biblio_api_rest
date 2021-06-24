@@ -121,6 +121,11 @@ class Livre
      */
     private $prets;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $dispo;
+
     public function __construct()
     {
         $this->prets = new ArrayCollection();
@@ -250,6 +255,18 @@ class Livre
     public function setAnnee(?int $annee): self
     {
         $this->annee = $annee;
+
+        return $this;
+    }
+
+    public function getDispo()
+    {
+        return $this->dispo;
+    }
+
+    public function setDispo($dispo)
+    {
+        $this->dispo = $dispo;
 
         return $this;
     }

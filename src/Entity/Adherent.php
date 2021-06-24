@@ -6,13 +6,22 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdherantRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AdherantRepository::class)
- * @ApiResource() 
+ * @ApiResource( 
+ *      collectionOperations={"get"={"method"="GET","path"= "/adherents","access_control"="(is_granted('ROLE_MANAGER))","access_control_message"="Vous ne pouvez avoir accès"},
+ *                            "post"={"method"="POST","access_control"="(is_granted('ROLE_MANAGER))","access_control_message"="Vous ne pouvez avoir accès" },  
+ *                           },
+ *      itemOperations={"get_adherent"= {"method"="GET","path":"/adherent/{id}","normalization_context"={"groups"={"get_adherent"}}},
+ *                      "put_adherent" ={"method"="PUT","path":"/adherent/{id}","access_control"="is_granted('ROLE_MANAGER')","access_control_message"="Vous n'avez pas les droits d'accéder à cette ressource","denormalization_context"= {"groups"={"put_manager"} }},
+ *                      "delete"={"method"="DELETE","path":"/adherent/{id}","access_control"="is_granted('ROLE_ADMIN')","access_control_message"="Vous n'avez pas les droits d'accéder à cette ressource"}
+ *                     }         
+ *             ) 
  * @UniqueEntity(fields ={"mail"}, message="Il existe déjà un mail {{ value }}, veuillez saisir un autre mail")
  */
 class Adherent implements UserInterface
@@ -72,6 +81,7 @@ class Adherent implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
+     * @ApiSubresource
      */
     private $prets;
 
